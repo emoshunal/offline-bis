@@ -4,7 +4,7 @@
         <aside class="w-64  border-r border-gray-200">
             <ul class="menu p-4 gap-2" style="font-family:  satoshi;">
                 <li>
-                    <RouterLink active-class="bg-gray-200 text-gray-800 rounded-lg">Basic Information</RouterLink>
+                    <RouterLink to="#" active-class="bg-gray-200 text-gray-800 rounded-lg">Basic Information</RouterLink>
                 </li>
                 <li><a>Contact and Address Details</a></li>
                 <li><a>Household Information</a></li>

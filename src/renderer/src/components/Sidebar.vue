@@ -143,7 +143,7 @@
                 </details>
             </li>
             <li>
-                <RouterLink to="/report" active-class="bg-accent text-gray-800 rounded-lg">
+                <a active-class="bg-accent text-gray-800 rounded-lg" @click="openReportModal">
                     <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -151,7 +151,7 @@
                     </svg>
 
                     Generate Report
-                </RouterLink>
+                </a>
             </li>
             <li>
 
@@ -179,17 +179,19 @@
 
         </ul>
 
-        <div class="mt-auto">
+        <div class="mt-auto mx-auto">
+            <img src="../assets/barangay-logo.png" alt="" srcset="" class="w-40 h-auto py-2">
             <button class="btn btn-sm btn-error w-full" @click="logout">Logout</button>
         </div>
     </aside>
+    <GenerateReport />
 </template>
 
 <script setup>
 
 
 import { RouterLink, useRouter } from 'vue-router';
-
+import GenerateReport from '../pages/secretary/report/GenerateReport.vue';
 const router = useRouter();
 
 
@@ -203,5 +205,10 @@ function gotoResidents() {
 
 function logout() {
     router.push('/login')
+}
+
+function openReportModal() {
+    const modal = document.getElementById('reportModal')
+    if (modal) modal.showModal()
 }
 </script>

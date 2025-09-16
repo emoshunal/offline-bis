@@ -70,23 +70,23 @@
 
         </div>
         <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
-            <table class="table">
-                <thead>
+            <table class="min-w-full table table-auto border-collapse border border-gray-300">
+                <thead class="bg-gray-200">
                     <tr>
-                        <th>Full Name</th>
-                        <th>Gender</th>
-                        <th>Age</th>
-                        <th>Mobile</th>
-                        <th>Civil Status</th>
-                        <th>Purok</th>
-                        <th></th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Full Name</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Gender</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Age</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Mobile</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Civil Status</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Purok</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="resident in filteredResidents" :key="resident.id">
+                    <tr class="hover:bg-gray-50" v-for="resident in filteredResidents" :key="resident.id">
                         <td>{{ resident.lastName + ", " + resident.firstName + " " + resident.middleName + " " +
                             resident.suffix
-                        }}</td>
+                            }}</td>
                         <td>{{ resident.gender }}</td>
                         <td>{{ resident.age }}</td>
                         <td>{{ resident.mobile }}</td>
@@ -117,13 +117,13 @@
             </table>
         </div>
         <div class="flex justify-center items-center gap-2 mt-6">
-            <!-- Previous Button -->
+            <!-- Previous Button
             <button class="btn btn-outline btn-sm" :disabled="currentPage === 1"
                 @click="$emit('update:currentPage', currentPage - 1)">
                 «
             </button>
 
-            <!-- Numbered Buttons -->
+       
             <button v-for="page in totalPages" :key="page" class="btn btn-sm" :class="{
                 'btn-primary': page === currentPage,
                 'btn-outline': page !== currentPage
@@ -131,11 +131,15 @@
                 {{ page }}
             </button>
 
-            <!-- Next Button -->
             <button class="btn btn-outline btn-sm" :disabled="currentPage === totalPages"
                 @click="$emit('update:currentPage', currentPage + 1)">
                 »
-            </button>
+            </button> -->
+            <div class="join">
+                <button class="join-item btn">«</button>
+                <button class="join-item btn">10</button>
+                <button class="join-item btn">»</button>
+            </div>
         </div>
 
         <!-- Add/Edit Modal -->
