@@ -1,7 +1,6 @@
 <template>
     <aside class="h-screen w-64 bg-base-200 p-4 flex flex-col">
-        <div class="mb-6 text-xl font-bold">My App</div>
-
+        <img src="../assets//logo.png" alt="" srcset="" class="w-40 h-auto py-2">
         <ul class="menu flex-1 gap-2">
             <li>
                 <RouterLink to="/home" active-class="bg-accent text-gray-800 rounded-lg">
@@ -40,9 +39,9 @@
                             </RouterLink>
                         </li>
                         <li>
-                            <a>
+                            <RouterLink to="/newresident" active-class="bg-accent text-gray-800 rounded-lg">
                                 New Resident
-                            </a>
+                            </RouterLink>
                         </li>
                     </ul>
                 </details>

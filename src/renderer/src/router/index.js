@@ -18,6 +18,7 @@ import BusinessPermit from '../pages/secretary/permit/BusinessPermit.vue'
 import DisclosurePolicy from '../pages/secretary/policy/DisclosurePolicy.vue'
 import TransactionHistory from '../pages/secretary/transaction/TransactionHistory.vue'
 import GenerateReport from '../pages/secretary/report/GenerateReport.vue'
+import NewResidentView from '../pages/secretary/residents/NewResidentView.vue'
 
 
 const routes = [
@@ -39,7 +40,8 @@ const routes = [
   { path: '/business-permit', component: BusinessPermit },
   { path: '/disclosure-policy', component: DisclosurePolicy },
   { path: '/transactions', component: TransactionHistory },
-  { path: '/report', component: GenerateReport }
+  { path: '/report', component: GenerateReport },
+  { path: '/newresident', component: NewResidentView}
 ]
 
 const router = createRouter({
