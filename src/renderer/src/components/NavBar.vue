@@ -9,7 +9,7 @@
             </button>
         </div>
         <div class="flex-1">
-            <p class="text-sm" style="font-family: satoshi-bold;">Barangay Bued</p>
+            <p class="text-sm" style="font-family: satoshi-bold;">Barangay Rabon</p>
         </div>
         <div class="flex gap-2">
             <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto" />
