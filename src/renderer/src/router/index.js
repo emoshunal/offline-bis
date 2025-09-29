@@ -19,9 +19,12 @@ import DisclosurePolicy from '../pages/secretary/policy/DisclosurePolicy.vue'
 import TransactionHistory from '../pages/secretary/transaction/TransactionHistory.vue'
 import GenerateReport from '../pages/secretary/report/GenerateReport.vue'
 import NewResidentView from '../pages/secretary/residents/NewResidentView.vue'
+import UserManagement from '../pages/superadmin/users/UserManagement.vue'
 
 
 const routes = [
+
+  // Secretary Routes
   { path: '/', redirect: '/login' },
   { path: '/login', component: LoginView },
   { path: '/login-token', component: LoginToken },
@@ -41,7 +44,10 @@ const routes = [
   { path: '/disclosure-policy', component: DisclosurePolicy },
   { path: '/transactions', component: TransactionHistory },
   { path: '/report', component: GenerateReport },
-  { path: '/newresident', component: NewResidentView}
+  { path: '/newresident', component: NewResidentView},
+
+  // Superadmin Routes
+  { path: '/superadmin', component: UserManagement}
 ]
 
 const router = createRouter({

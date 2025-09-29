@@ -24,5 +24,6 @@ const route = useRoute()
 const hideSidebar = computed(() =>
   route.path.startsWith('/login')
   || route.path.startsWith('/login-token')
+  || route.path.startsWith('/superadmin')
 )
 </script>

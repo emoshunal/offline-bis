@@ -66,7 +66,7 @@ function onLogin() {
   if(username.value === '' || password.value === ''){
     error.value = 'Field must not be empty'
   } else if (username.value === STATIC_USER.username && password.value === STATIC_USER.password) {
-    router.push('/home')
+    router.push('/superadmin')
     //  error.value = 'Correct credentials!'
   } else {
     error.value = 'Invalid username or password'
