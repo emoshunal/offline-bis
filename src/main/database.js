@@ -111,4 +111,7 @@ db.prepare(`
     `).run();
 
 
+    export default db;
+
+
     
