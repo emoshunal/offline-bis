@@ -2,6 +2,7 @@ import { ipcMain } from "electron";
 import bcrypt from "bcryptjs";
 import db from "../database";
 
+
 ipcMain.handle("user:add", async (event, { username, password, user_role }) => {
     try {
         const existing = db.prepare("SELECT * FROM users WHERE username = ?").get(username);
@@ -20,10 +21,11 @@ ipcMain.handle("user:add", async (event, { username, password, user_role }) => {
     }
 });
 
-ipcMain.handle("user:update", async (event, { user_id, username, password, user_role }) => {
+ipcMain.handle("user:update", async (event, { user_id, username, user_role }) => {
     try {
+        const hashed_password = await bcrypt.hash("barangay", 8);
         const stmt = db.prepare("UPDATE users SET username = ?, password = ?, user_role = ? WHERE user_id = ?");
-        const result = stmt.run(username, password, user_role, user_id);
+        const result = stmt.run(username, hashed_password, user_role, user_id);
         return { success: result.changes > 0 };
     } catch (err) {
         console.error("Error updating user: ", err);

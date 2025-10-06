@@ -25,9 +25,12 @@
     "better-sqlite3": "^12.4.1",
     "chart.js": "^4.5.0",
     "daisyui": "^5.1.10",
+    "file-saver": "^2.0.5",
     "pinia": "^3.0.3",
     "tailwindcss": "^4.1.13",
-    "vue-router": "^4.5.1"
+    "vue-good-table-next": "^0.2.2",
+    "vue-router": "^4.5.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^2.0.0",

@@ -39,7 +39,7 @@ db.prepare(`
     )
     `).run();
 
-    db.prepare(`
+db.prepare(`
         CREATE TABLE IF NOT EXISTS households(
         household_id INTEGER PRIMARY KEY AUTOINCREMENT,
         household_head_id INTEGER,
@@ -50,7 +50,7 @@ db.prepare(`
         )    
     `).run();
 
-    db.prepare(`
+db.prepare(`
         CREATE TABLE IF NOT EXISTS families(
         family_id INTEGER PRIMARY KEY AUTOINCREMENT,
         household_id INTEGER,
@@ -59,8 +59,8 @@ db.prepare(`
         FOREIGN KEY (household_id) REFERENCES households(household_id),
         FOREIGN KEY (family_head_id) REFERENCES residents(resident_id)
         )`).run();
-    
-    db.prepare(`
+
+db.prepare(`
         CREATE TABLE IF NOT EXISTS certifications(
         certification_id INTEGER PRIMARY KEY AUTOINCREMENT,
         resident_id INTEGER,
@@ -73,7 +73,7 @@ db.prepare(`
         )
         `).run();
 
-    db.prepare(`
+db.prepare(`
         CREATE TABLE IF NOT EXISTS blotter(
         blotter_id INTEGER PRIMARY KEY AUTOINCREMENT,
         case_no TEXT,
@@ -87,19 +87,28 @@ db.prepare(`
         created_by_user_id INTEGER,
         created_at TEXT DEFAULT (datetime('now'))
         )`).run();
-    
-    db.prepare(`
+
+db.prepare(`
         CREATE TABLE IF NOT EXISTS users(
         user_id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT,
         password TEXT,
         password_token TEXT,
         user_role TEXT,
+        status INTEGER DEFAULT 0,
         created_at TEXT DEFAULT (datetime('now'))
         )    
     `).run();
-    
-    db.prepare(`
+
+try {
+    db.prepare(`ALTER TABLE users ADD COLUMN status INTEGER DEFAULT 0`).run();
+} catch (err) {
+    if (!/duplicate column/i.test(err.message)) {
+        throw err; 
+    }
+}
+
+db.prepare(`
         CREATE TABLE IF NOT EXISTS logs(
         log_id INTEGER PRIMARY KEY AUTOINCREMENT,
         timestamp TEXT DEFAULT (datetime('now')),
@@ -111,7 +120,6 @@ db.prepare(`
     `).run();
 
 
-    export default db;
+export default db;
 
 
-    
