@@ -4,6 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import './database.js'
 import './ipcHandlers/users.js'
+import './ipcHandlers/residents.js'
 // import './database'
 
 function createWindow() {

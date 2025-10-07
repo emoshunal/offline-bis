@@ -41,8 +41,8 @@ const columns = [
         }
     },
     {
-        label: 'Username',
-        field: 'username',
+        label: 'Full Name',
+        field: 'fullname',
         sortable: true,
         filterOptions: {
             enabled: true,
