@@ -44,15 +44,32 @@ const routes = [
   { path: '/disclosure-policy', component: DisclosurePolicy },
   { path: '/transactions', component: TransactionHistory },
   { path: '/report', component: GenerateReport },
-  { path: '/newresident', component: NewResidentView},
+  { path: '/newresident', component: NewResidentView },
 
   // Superadmin Routes
-  { path: '/superadmin', component: UserManagement}
+  { path: '/superadmin', component: UserManagement }
 ]
 
 const router = createRouter({
   history: createWebHashHistory(), // ✅ required for Electron
   routes
-})
+});
+
+router.beforeEach((to, from, next) => {
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  if (!user && to.path !== "/login") {
+    next('/login');
+  } else if (user && to.path === "/login") {
+    if (user.user_role === "Admin") {
+      next('/superadmin');
+    } else {
+      next('/home');
+    }
+  } else {
+    next();
+  }
+});
+
 
 export default router

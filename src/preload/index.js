@@ -6,7 +6,8 @@ const api = {
   addUser: (user) => ipcRenderer.invoke('user:add', user),
   getAllUsers: () => ipcRenderer.invoke('user:getAll'),
   updateUser: (user) => ipcRenderer.invoke('user:update', user),
-  deleteUser: (user_id) => ipcRenderer.invoke('user:delete', user_id)
+  deleteUser: (user_id) => ipcRenderer.invoke('user:delete', user_id),
+  loginUser: (credentials) => ipcRenderer.invoke('user:login', credentials)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

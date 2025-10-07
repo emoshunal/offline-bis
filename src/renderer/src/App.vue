@@ -1,5 +1,4 @@
 <template>
-
   <div v-if="!hideSidebar" class="flex h-screen">
     <Sidebar />
     <main class="flex-1 p-6">
@@ -14,12 +13,18 @@
 </template>
 
 <script setup>
-import { computed } from 'vue' 
+import { onMounted,computed } from 'vue' 
 import Sidebar from './components/Sidebar.vue'
 import { useRoute } from 'vue-router'
 import NavBar from './components/NavBar.vue'
+import { useUsers } from './composables/useUsers'
 
 const route = useRoute()
+const { loadStoredUser, currentUser } = useUsers()
+onMounted(() => {
+  loadStoredUser();
+ 
+});
 
 const hideSidebar = computed(() =>
   route.path.startsWith('/login')

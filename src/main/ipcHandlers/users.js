@@ -2,6 +2,26 @@ import { ipcMain } from "electron";
 import bcrypt from "bcryptjs";
 import db from "../database";
 
+ipcMain.handle("user:login", async (event, { username, password }) => {
+    try {
+        const user = db.prepare("SELECT * FROM users WHERE username = ?").get(username);
+        if (!user) {
+            return { success: false, error: "User not found" };
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return { success: false, error: "Invalid password" };
+        }
+
+        if(user.status === 0){
+            return { success: false, error: "Account locked" };
+        }
+        return { success: true, user };
+    } catch (err) {
+        console.error("Error during login: ", err);
+        return { success: false, error: "Login failed" };
+    }
+});
 
 ipcMain.handle("user:add", async (event, { username, password, user_role }) => {
     try {

@@ -32,3 +32,14 @@ $ npm run build:mac
 # For Linux
 $ npm run build:linux
 ```
+
+
+
+# Credentials
+Secretary
+username: testuser
+password: testuser
+
+Admin
+username: testuser2
+password: testuser2

@@ -33,6 +33,7 @@ db.prepare(`
         relationship_to_family_head TEXT,
         created_at TEXT DEFAULT (datetime('now')),
         added_by_user_id INTEGER,
+        tags TEXT,
         FOREIGN KEY (household_id) REFERENCES households(household_id),
         FOREIGN KEY (family_id) REFERENCES families(family_id)
 
@@ -102,6 +103,8 @@ db.prepare(`
 
 try {
     db.prepare(`ALTER TABLE users ADD COLUMN status INTEGER DEFAULT 0`).run();
+    db.prepare(`ALTER TABLE users ADD COLUMN fullname TEXT`).run();
+    db.prepare(`ALTER TABLE residents ADD COLUMN tags TEXT`).run();
 } catch (err) {
     if (!/duplicate column/i.test(err.message)) {
         throw err; 

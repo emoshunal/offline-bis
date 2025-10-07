@@ -1,5 +1,6 @@
 <template>
     <div class="pt-8">
+        <Logout class="absolute top-4 right-4"/>
         <div class="card w-1/2 mx-auto bg-base-100 shadow-sm">
             <div class="card-body">
                 <div class="card-header flex  mb-2">
@@ -30,6 +31,7 @@ import IconButton from '../../../components/Shared/IconButton.vue'
 import UserTable from './components/UserTable.vue'
 import UserAddModal from './components/UserAddModal.vue'
 import UserUpdateModal from './components/UserUpdateModal.vue'
+import Logout from '../../../components/Logout.vue'
 
 const { users, fetchUsers, updateUser, deleteUser } = useUsers();
 const modalRef = ref(null);

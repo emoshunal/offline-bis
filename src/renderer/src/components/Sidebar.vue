@@ -192,8 +192,9 @@
 
 import { RouterLink, useRouter } from 'vue-router';
 import GenerateReport from '../pages/secretary/report/GenerateReport.vue';
+import { useUsers } from '../composables/useUsers';
 const router = useRouter();
-
+const { logout } = useUsers();
 
 function gotoDashboard() {
     router.push('/home')
@@ -203,9 +204,7 @@ function gotoResidents() {
     router.push('/residents')
 }
 
-function logout() {
-    router.push('/login')
-}
+
 
 function openReportModal() {
     const modal = document.getElementById('reportModal')

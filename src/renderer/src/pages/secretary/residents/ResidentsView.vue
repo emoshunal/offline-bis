@@ -1,40 +1,49 @@
 <template>
     <div class="pt-8">
-        <div class="breadcrumbs text-sm pb-8">
-            <ul>
-                <li style="font-family: satoshi;">
-                    <a>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            class="h-4 w-4 stroke-current">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
-                        </svg>
-                        Home
-                    </a>
-                </li>
-                <li style="font-family: satoshi;">
-                    <a>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            class="h-4 w-4 stroke-current">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
-                        </svg>
-                        Residents
-                    </a>
-                </li>
-                <li style="font-family: satoshi;">
-                    <span class="inline-flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            class="h-4 w-4 stroke-current">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                        Lists
-                    </span>
-                </li>
-            </ul>
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
+            <div class="breadcrumbs text-sm pb-8">
+                <ul>
+                    <li style="font-family: satoshi;">
+                        <a>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                class="h-4 w-4 stroke-current">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z">
+                                </path>
+                            </svg>
+                            Home
+                        </a>
+                    </li>
+                    <li style="font-family: satoshi;">
+                        <a>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                class="h-4 w-4 stroke-current">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z">
+                                </path>
+                            </svg>
+                            Residents
+                        </a>
+                    </li>
+                    <li style="font-family: satoshi;">
+                        <span class="inline-flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                class="h-4 w-4 stroke-current">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                </path>
+                            </svg>
+                            Lists
+                        </span>
+                    </li>
+                </ul>
+            </div>
+            <div class="w-[200px] text-right">
+                <h1 v-if="currentUser" style="font-family: satoshi-bold;" class="capitalize text-gray-500 text-xl"> {{ currentUser.username }}</h1>
+                <p v-if="currentUser" style="font-family: satoshi-light;" class="text-sm">{{ currentUser.user_role }}</p>
+            </div>
         </div>
+
         <div class="my-2 flex justify-between items-center">
             <button class="btn btn-accent btn-circle"><svg class="w-4 h-4 text-gray-800 dark:text-white"
                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
@@ -86,7 +95,7 @@
                     <tr class="hover:bg-gray-50" v-for="resident in filteredResidents" :key="resident.id">
                         <td>{{ resident.lastName + ", " + resident.firstName + " " + resident.middleName + " " +
                             resident.suffix
-                            }}</td>
+                        }}</td>
                         <td>{{ resident.gender }}</td>
                         <td>{{ resident.age }}</td>
                         <td>{{ resident.mobile }}</td>
@@ -171,7 +180,10 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { useUsers } from '../../../composables/useUsers'
 
+const { currentUser } = useUsers()
+console.log("Current User", currentUser.value?.username);
 const residents = ref([
     {
         id: 1,

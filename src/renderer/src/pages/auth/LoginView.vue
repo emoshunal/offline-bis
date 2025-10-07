@@ -36,7 +36,7 @@
 
           </fieldset>
           <p class="text-right"> <a class="link link-hover text-sm" @click="gotoLoginToken">Login as token</a></p>
-         
+
           <button class="btn btn-success btn-block mt-2">Login</button>
         </form>
       </div>
@@ -47,34 +47,47 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useUsers } from '../../composables/useUsers'
+
 
 const username = ref('')
 const password = ref('')
+const { loginUser, currentUser, loginError } = useUsers()
 const error = ref('')
 
 const router = useRouter()
 
-const STATIC_USER = {
-  username: 'admin',
-  password: '1234'
-}
-
-function onLogin() {
-
-  if(username.value === '' || password.value === ''){
+watch(loginError, (newError) => {
+  if (newError) {
+    error.value = newError
+  }
+});
+async function onLogin() {
+  // router.push('/superadmin');
+  // return;
+  error.value = ''
+  if (!username.value || !password.value) {
     error.value = 'Field must not be empty'
-  } else if (username.value === STATIC_USER.username && password.value === STATIC_USER.password) {
-    router.push('/superadmin')
-    //  error.value = 'Correct credentials!'
+  }
+  const success = await loginUser(username.value, password.value)
+  if (success) {
+    const user = JSON.parse(JSON.stringify(currentUser.value))
+    if (user.user_role === 'Admin') {
+      router.push('/superadmin');
+    } else if (user.user_role === 'Secretary') {
+      router.push('/home');
+    } else {
+      error.value = 'Unauthorized role';
+     
+    }
   } else {
-    error.value = 'Invalid username or password'
+    error.value = loginError.value || 'Login failed. Please check your credentials.';
   }
 }
 
-function gotoLoginToken(){
-  router.push('/login-token');
+const gotoLoginToken = () => {
+  router.push('/login-token')
 }
-
 </script>
