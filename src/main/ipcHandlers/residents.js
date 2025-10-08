@@ -13,6 +13,7 @@ ipcMain.handle("resident:getAllRecords", async () => {
             r.resident_since,
             r.tags,
             r.sitio,
+            r.residency_status,
             r.house_no_st,
             r.marital_status,
             r.gender,
@@ -37,5 +38,20 @@ ipcMain.handle("resident:getAllRecords", async () => {
     } catch (err) {
         console.error("Error fetching residents: ", err);
         return { success: false, error: "Failed to fetch residents" };
+    }
+});
+
+ipcMain.handle("resident:updateRemarks", async (event, residents) => {
+    try {
+        const { resident_id, tags } = residents;
+        const stmt = db.prepare("UPDATE residents SET tags = ? WHERE resident_id = ?");
+        const info = stmt.run(tags, resident_id);
+        if (info.changes === 0) {
+            return { success: false, error: "No resident found with the given ID" };
+        }
+        return { success: true };
+    } catch (err) {
+        console.error("Error updating resident remarks: ", err);
+        return { success: false, error: "Failed to update resident remarks" };
     }
 });

@@ -38,13 +38,13 @@
                     </li>
                 </ul>
             </div>
-            <div class="w-[200px] text-right">
+            <!-- <div class="w-[200px] text-right">
                 <h1 v-if="currentUser" style="font-family: satoshi-bold;" class="capitalize text-gray-500 text-xl"> {{ currentUser.username }}</h1>
                 <p v-if="currentUser" style="font-family: satoshi-light;" class="text-sm">{{ currentUser.user_role }}</p>
-            </div>
+            </div> -->
         </div>
 
-        <div class="my-2 flex justify-between items-center">
+        <!-- <div class="my-2 flex justify-between items-center">
             <button class="btn btn-accent btn-circle"><svg class="w-4 h-4 text-gray-800 dark:text-white"
                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                     viewBox="0 0 24 24">
@@ -76,8 +76,7 @@
                 </button>
 
             </div>
-
-        </div>
+        </div> -->
         <div class="overflow-y-auto rounded-box border border-base-content/5 bg-base-100">
             <ResidentsTable :residents="residents" />
           

@@ -18,9 +18,15 @@ export function useResidents() {
         }
     };
 
+    const updateResidentRemarks = async (residents) => {
+        const response = await window.api.updateResidentRemarks(residents);
+        return response;
+    }
+
     return {
         residents,
         fetchResidents,
-        loadStoredUser
+        loadStoredUser,
+        updateResidentRemarks
     };
 }
