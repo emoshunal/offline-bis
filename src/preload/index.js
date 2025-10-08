@@ -9,7 +9,8 @@ const api = {
   deleteUser: (user_id) => ipcRenderer.invoke('user:delete', user_id),
   loginUser: (credentials) => ipcRenderer.invoke('user:login', credentials),
   getAllResidents: () => ipcRenderer.invoke('resident:getAllRecords'),
-  updateResidentRemarks: (residents) => ipcRenderer.invoke('resident:updateRemarks', residents)
+  updateResidentRemarks: (residents) => ipcRenderer.invoke('resident:updateRemarks', residents),
+  addCertification: (certification) => ipcRenderer.invoke('certification:add', certification)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

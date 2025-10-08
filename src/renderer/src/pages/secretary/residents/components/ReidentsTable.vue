@@ -15,7 +15,6 @@
     </button>
   </div>
 
-
   <vue-good-table max-height="60vh" styleClass="vgt-table bordered" :columns="visibleColumns" :rows="rows"
     :fixed-header="true" @on-rows-change="handleRowsChange" :pagination-options="{
       enabled: true, perPage: 10, rowsPerPageLabel: 'Records per page',
@@ -43,6 +42,7 @@
               <li><a @click="deleteRow(props.row)">Delete</a></li>
               <li><a @click="viewRow(props.row)">View</a></li>
               <li><a @click="setRemarks(props.row)">Set Remarks</a></li>
+              <li><a @click="moreDialog(props.row)">More</a></li>
             </ul>
           </div>
         </template>
@@ -54,16 +54,19 @@
     </template>
   </vue-good-table>
   <RemarksModal ref="remarksModalRef" @remarks-saved="fetchResidents" />
+  <MoreDialog ref="moreDialogRef" />
 </template>
 
 <script setup>
 import { computed, ref, onMounted } from 'vue';
 import { VueGoodTable } from 'vue-good-table-next';
 import RemarksModal from './RemarksModal.vue';
+import MoreDialog from './MoreDialog.vue'
 import { useResidents } from '../../../../composables/useResidents';
 
 const { fetchResidents } = useResidents();
 const remarksModalRef = ref(null);
+const moreDialogRef = ref(null);
 const totalFilteredRows = ref(0);
 
 const props = defineProps({
@@ -254,6 +257,11 @@ function viewRow(row) {
 const setRemarks = (row) => {
   remarksModalRef.value.open(row);
 };
+
+const moreDialog = (row) => {
+  moreDialogRef.value.open(row)
+  console.log(row)
+}
 
 </script>
 

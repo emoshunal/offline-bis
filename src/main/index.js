@@ -5,6 +5,7 @@ import icon from '../../resources/icon.png?asset'
 import './database.js'
 import './ipcHandlers/users.js'
 import './ipcHandlers/residents.js'
+import './ipcHandlers/certifications.js'
 // import './database'
 
 function createWindow() {
