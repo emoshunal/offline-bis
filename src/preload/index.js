@@ -10,7 +10,8 @@ const api = {
   loginUser: (credentials) => ipcRenderer.invoke('user:login', credentials),
   getAllResidents: () => ipcRenderer.invoke('resident:getAllRecords'),
   updateResidentRemarks: (residents) => ipcRenderer.invoke('resident:updateRemarks', residents),
-  addCertification: (certification) => ipcRenderer.invoke('certification:add', certification)
+  addCertification: (certification) => ipcRenderer.invoke('certification:add', certification),
+  getAllCerts: (type) => ipcRenderer.invoke('certification:getAll',type),
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

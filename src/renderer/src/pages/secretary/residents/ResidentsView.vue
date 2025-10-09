@@ -77,10 +77,10 @@
 
             </div>
         </div> -->
-        <div class="overflow-y-auto rounded-box border border-base-content/5 bg-base-100">
+      
             <ResidentsTable :residents="residents" />
           
-        </div>
+       
     </div>
 </template>
 

@@ -15,8 +15,8 @@
     </button>
   </div>
 
-  <vue-good-table max-height="60vh" styleClass="vgt-table bordered" :columns="visibleColumns" :rows="rows"
-    :fixed-header="true" @on-rows-change="handleRowsChange" :pagination-options="{
+  <vue-good-table max-height="60vh" styleClass="vgt-table bordered striped condensed" :columns="visibleColumns"
+    :line-numbers="true" :rows="rows" :fixed-header="false" @on-rows-change="handleRowsChange" :pagination-options="{
       enabled: true, perPage: 10, rowsPerPageLabel: 'Records per page',
       perPageDropdown: [10, 20, 50, 100, 200], dropdownAllowAll: true,
       infoFn: (params) => `Showing ${params.firstRecordOnPage} to ${params.lastRecordOnPage} of page ${params.currentPage}`,
@@ -29,14 +29,15 @@
         'text-base': !['resident_name', 'phone', 'tags'].includes(props.column.field)
       }">
         <template v-if="props.column.field === 'actions'">
-          <div class="dropdown dropdown-left dropdown-end dropdown-hover">
-            <div tabindex="0" role="button" class="m-1 p-1 rounded-full hover:bg-gray-200 cursor-pointer">
+          <div class="dropdown dropdown-left dropdown-center">
+            <div tabindex="0" role="button" class=" rounded-full hover:bg-gray-200 cursor-pointer">
               <svg class="w-6 h-6  text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                 width="24" height="24" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M12 6h.01M12 12h.01M12 18h.01" />
               </svg>
             </div>
-            <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-40 p-2 shadow border-1 border-gray-200">
+            <ul tabindex="0"
+              class="dropdown-content menu bg-base-100 rounded-box w-40 p-2 shadow border-1 border-gray-200">
               <li><a @click="editRow(props.row)">Edit</a></li>
               <hr class="my-1 border-gray-300" />
               <li><a @click="deleteRow(props.row)">Delete</a></li>
@@ -77,12 +78,7 @@ const props = defineProps({
    Columns (your existing columns)
    --------------------------- */
 const columns = [
-  {
-    label: 'No.',
-    field: 'index',
-    sortable: false,
 
-  },
   {
     label: 'Full Name',
     field: 'resident_name',

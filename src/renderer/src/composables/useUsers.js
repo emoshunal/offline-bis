@@ -4,10 +4,10 @@ import { useRouter } from "vue-router";
 const users = ref([])
 const currentUser = ref(null);
 const loginError = ref("");
-const router = useRouter();
+
 export function useUsers() {
 
-
+    const router = useRouter();
     const loadStoredUser = () => {
         const stored = localStorage.getItem("user");
         if (stored) currentUser.value = JSON.parse(stored);

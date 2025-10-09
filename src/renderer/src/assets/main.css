@@ -25,6 +25,7 @@
   src: url('./Fonts/WEB/fonts/Satoshi-Medium.ttf');
 }
 
+
 .router-link-active svg {
   @apply text-primary-content;
 }
