@@ -1,11 +1,43 @@
 import { ipcMain } from "electron";
 import db from "../database";
 
-ipcMain.handle("certification:add", async (event, { resident_id, control_number, purpose, user_id }) => {
+ipcMain.handle("certification:add", async (event, { resident_id, certification_type, purpose, issued_by_user_id }) => {
     try {
-        const stmt = db.prepare("INSERT INTO certifications (resident_id, control_number, purpose, issued_by_user_id) VALUES (?, ?, ?, ?)")
-        const result = stmt.run(resident_id, control_number, purpose, user_id);
-        return { success: true, id: result.lastInsertRowid }
+        const prefixes = {
+            "Barangay Clearance" : "BC",
+            "Certificate of Indigency" : "COI",
+            "Certificate of Residency" : "COR",
+            "Certificate of Good Moral" : "CGM",
+            "Certificate of Low Income" : "CLI",
+            "First Time Job Seeker" : "FTJS"
+        };
+        const prefix = prefixes[certification_type] || "GEN";
+        const year = new Date().getFullYear();
+        
+        const stmtLast = db.prepare(`
+            SELECT control_number
+            FROM certifications
+            WHERE certification_type = ?
+                AND control_number LIKE ?
+            ORDER BY certification_id DESC
+            LIMIT 1
+            `);
+        const last = stmtLast.get(certification_type, `${prefix}-${year}-%`);
+
+        let nextNum = 1;
+        if(last && last.control_number){
+            const match = last.control_number.match(/-(\d+)$/);
+            if(match) nextNum = parseInt(match[1]) + 1;
+        }
+
+        const padded = String(nextNum).padStart(4,"0")
+        const control_number = `${prefix}-${year}-${padded}`; 
+
+        const date_issued = new Date().toLocaleString()
+
+        const stmt = db.prepare("INSERT INTO certifications (resident_id, purpose, issued_by_user_id, certification_type, control_number,date_issued) VALUES (?, ?, ?, ?, ?, ?)")
+        const result = stmt.run(resident_id,  purpose, issued_by_user_id, certification_type, control_number, date_issued);
+        return { success: true, id: result.lastInsertRowid, control_number }
     } catch (error) {
         console.error("Error adding certifications: ", error);
         return { success: false, error: "Failed to add certifications" };

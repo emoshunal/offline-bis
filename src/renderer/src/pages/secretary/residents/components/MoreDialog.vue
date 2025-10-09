@@ -86,7 +86,7 @@
       <form method="dialog" @submit.prevent="handleSaveCerts">
         <fieldset class="fieldset mt-4">
 
-          <textarea class="textarea h-24 w-full textarea-md" placeholder="Purpose"></textarea>
+          <textarea v-model="purpose" class="textarea h-24 w-full textarea-md" placeholder="Purpose"></textarea>
           <div class="label">Do not leave blank</div>
         </fieldset>
         <div class="modal-action">
@@ -100,6 +100,8 @@
 <script setup>
 import { ref } from 'vue';
 import { useUsers } from '../../../../composables/useUsers';
+import { useCertifications } from '../../../../composables/useCertifications';
+
 const props = defineProps({ roles: Array })
 const emit = defineEmits(["saved-certificate"])
 
@@ -109,6 +111,7 @@ const selectedDocument = ref(null);
 const showPurposeModal = ref(false);
 const purpose = ref('')
 
+const { saveCertification} = useCertifications();
 const { currentUser } = useUsers()
 const open = (row) => {
   selectedRow.value = row
@@ -119,6 +122,7 @@ const openPurposeModal = (documentName) => {
   selectedDocument.value = documentName
   showPurposeModal.value = true
   moreDialogRef.value.close();
+  console.log(currentUser.value.user_id)
 }
 
 const close = () => {
@@ -128,13 +132,14 @@ const close = () => {
 const handleSaveCerts = async () => {
   try {
     await saveCertification({
-      resident_id: selectedRow.resident_id,
-      certification_type: selectedDocument,
+      resident_id: selectedRow.value.resident_id,
+      certification_type: selectedDocument.value,
       purpose: purpose.value,
-      issued_by_user_id: currentUser.user_id
+      issued_by_user_id: currentUser.value.user_id,
     });
 
     emit('saved-certification');
+    console.log("Cert saved");
   } catch (error) {
     console.error("Failed certification: ", error)
   }
