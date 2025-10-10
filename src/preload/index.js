@@ -12,9 +12,13 @@ const api = {
   updateResidentRemarks: (residents) => ipcRenderer.invoke('resident:updateRemarks', residents),
   addCertification: (certification) => ipcRenderer.invoke('certification:add', certification),
   getAllCerts: (type) => ipcRenderer.invoke('certification:getAll',type),
+  printCertificate: (certification) => ipcRenderer.invoke('certificate:print', certification),
+  printToPDF: (options) => ipcRenderer.invoke('print-to-pdf', options),
+  printElementToPDF: (payload) => ipcRenderer.invoke('print-element-to-pdf', payload),
+  
 }
 
-// Use `contextBridge` APIs to expose Electron APIs to
+// Use `contextBridge` APIs to expose Electron APIs t
 // renderer only if context isolation is enabled, otherwise
 // just add to the DOM global.
 if (process.contextIsolated) {

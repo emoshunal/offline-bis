@@ -16,17 +16,17 @@ export function useCertifications() {
     const saveCertification = async(certification) => {
         const response = await window.api.addCertification(certification);
         if(response.success){
-            //  fetchCerts
             await fetchCerts();
             console.log("Certification saved successfully");
         }else{
             console.error("Failed to fetch users: ", response.error)
         }
+        return response;
     }
-
     return {
         certs,
         saveCertification,
-        fetchCerts
+        fetchCerts,
+        
     }
 }

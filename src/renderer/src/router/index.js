@@ -21,6 +21,9 @@ import GenerateReport from '../pages/secretary/report/GenerateReport.vue'
 import NewResidentView from '../pages/secretary/residents/NewResidentView.vue'
 import UserManagement from '../pages/superadmin/users/UserManagement.vue'
 
+// Printing preview page
+
+import CertificatePrint from '../print/CertificatePrint.vue'
 
 const routes = [
 
@@ -47,7 +50,10 @@ const routes = [
   { path: '/newresident', component: NewResidentView },
 
   // Superadmin Routes
-  { path: '/superadmin', component: UserManagement }
+  { path: '/superadmin', component: UserManagement },
+
+  // Printing preview routes
+  {path: '/certificate-preview-print', component: CertificatePrint}
 ]
 
 const router = createRouter({

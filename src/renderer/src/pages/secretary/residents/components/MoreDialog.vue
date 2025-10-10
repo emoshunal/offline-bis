@@ -101,17 +101,22 @@
 import { ref } from 'vue';
 import { useUsers } from '../../../../composables/useUsers';
 import { useCertifications } from '../../../../composables/useCertifications';
+import { useRouter } from 'vue-router';
+
 
 const props = defineProps({ roles: Array })
 const emit = defineEmits(["saved-certificate"])
+
+const router = useRouter();
 
 const moreDialogRef = ref(null);
 const selectedRow = ref(null);
 const selectedDocument = ref(null);
 const showPurposeModal = ref(false);
 const purpose = ref('')
+const loading = ref(false)
 
-const { saveCertification} = useCertifications();
+const { saveCertification, printCertificate} = useCertifications();
 const { currentUser } = useUsers()
 const open = (row) => {
   selectedRow.value = row
@@ -131,17 +136,37 @@ const close = () => {
 
 const handleSaveCerts = async () => {
   try {
-    await saveCertification({
+    loading.value = true;
+    const response = await saveCertification({
       resident_id: selectedRow.value.resident_id,
       certification_type: selectedDocument.value,
       purpose: purpose.value,
       issued_by_user_id: currentUser.value.user_id,
     });
+    console.log("reponses" ,currentUser.value.user_role)
+    if (response.success) {
+      const data = {
+        ...response,
+        resident_name: selectedRow.value.resident_name,
+        certification_type: selectedDocument.value,
+        purpose: purpose.value,
+        issued_by: currentUser.value.user_role || "Barangay Official",
+        date_issued: new Date().toISOString(),
+      };
 
-    emit('saved-certification');
-    console.log("Cert saved");
+      // Navigate to preview route with data
+      router.push({
+        path: "/certificate-preview-print",
+        query: { data: encodeURIComponent(JSON.stringify(data)) },
+      });
+   
+
+    }
+ 
   } catch (error) {
     console.error("Failed certification: ", error)
+  }finally{
+    loading.value= false;
   }
 }
 defineExpose({ open, close });
