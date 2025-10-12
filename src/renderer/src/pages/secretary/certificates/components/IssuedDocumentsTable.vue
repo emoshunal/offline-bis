@@ -37,74 +37,97 @@
         </div>
     </div>
 
-    <div class="w-full">
 
-
-        <vue-good-table max-height="60vh" styleClass="vgt-table bordered striped condensed" :columns="columns"
-            :rows="filteredRows" :line-numbers="true" :pagination-options="{
-                enabled: true,
-                perPage: 10,
-                rowsPerPageLabel: 'Records per page',
-                perPageDropdown: [10, 20, 50, 100, 200],
-                dropdownAllowAll: true,
-                infoFn: (params) =>
-                    `Showing ${params.firstRecordOnPage} to ${params.lastRecordOnPage} of page ${params.currentPage}`,
-            }" class="rounded-lg">
-            <template #table-row="props">
-                <!-- Actions column -->
-                <template v-if="props.column.field === 'actions'">
-                    <div class="dropdown dropdown-left dropdown-center">
-                        <div tabindex="0" role="button" class="rounded-full hover:bg-gray-200 cursor-pointer">
-                            <svg class="w-6 h-6 text-gray-800 dark:text-white" xmlns="http://www.w3.org/2000/svg"
-                                width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
-                                    d="M12 6h.01M12 12h.01M12 18h.01" />
-                            </svg>
-                        </div>
-                        <ul tabindex="0"
-                            class="dropdown-content menu bg-base-100 rounded-box z-[1] w-40 p-2 shadow border-1 border-gray-200">
-                            <li><a>Edit</a></li>
-                            <hr class="my-1 border-gray-300" />
-                            <li><a>Delete</a></li>
-                            <li><a @click="gotoPrintPreview(props.row)">Preview</a></li>
-                        </ul>
+    <vue-good-table max-height="60vh" :line-numbers="true" styleClass="vgt-table bordered striped condensed"
+        :columns="columns" :rows="filteredRows" :pagination-options="{
+            enabled: true,
+            perPage: 10,
+            rowsPerPageLabel: 'Records per page',
+            perPageDropdown: [10, 20, 50, 100, 200],
+            dropdownAllowAll: true,
+            infoFn: (params) =>
+                `Showing ${params.firstRecordOnPage} to ${params.lastRecordOnPage} of page ${params.currentPage}`,
+        }" class="rounded-lg">
+        <template #table-row="props">
+            <!-- Actions column -->
+            <template v-if="props.column.field === 'actions'">
+                <div class="dropdown dropdown-left dropdown-center ">
+                    <div tabindex="0" role="button" class="rounded-full hover:bg-gray-200 cursor-pointer">
+                        <svg class="w-6 h-6 text-gray-800 dark:text-white" xmlns="http://www.w3.org/2000/svg" width="24"
+                            height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
+                                d="M12 6h.01M12 12h.01M12 18h.01" />
+                        </svg>
                     </div>
-                </template>
-
-                <!-- Other columns -->
-                <template v-else>
-                    <span v-html="props.column.formatter
-                        ? props.column.formatter(props.row[props.column.field], props.row)
-                        : props.row[props.column.field]
-                        "></span>
-                </template>
+                    <ul tabindex="0"
+                        class="dropdown-content menu bg-base-100 rounded-box z-[9999] w-40 p-2 shadow border-1 border-gray-200">
+                        <li><a @click="gotoPrintPreview(props.row)">Preview</a></li>
+                    </ul>
+                </div>
             </template>
-        </vue-good-table>
-    </div>
+
+            <!-- Other columns -->
+            <template v-else>
+                <span v-html="props.column.formatter
+                    ? props.column.formatter(props.row[props.column.field], props.row)
+                    : props.row[props.column.field]
+                    "></span>
+            </template>
+        </template>
+    </vue-good-table>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { VueGoodTable } from "vue-good-table-next";
 import { useCertifications } from "../../../../composables/useCertifications";
-import { useRouter } from "vue-router"
+import { useRouter } from 'vue-router';
+
 const { fetchCerts, certs } = useCertifications();
 
+const router = useRouter();
 const startDate = ref("");
 const endDate = ref("");
 const searchQuery = ref("");
-const router = useRouter();
 
+
+// Table columns
 const columns = [
-    { label: "Full Name", field: "resident_name", sortable: true, filterOptions: { enabled: true, placeholder: "Search Name..." } },
-    { label: "Purpose", field: "purpose", sortable: true, filterOptions: { enabled: true, placeholder: "Search Purpose..." } },
+ 
+    {
+        label: "Full Name",
+        field: "resident_name",
+        sortable: true,
+        filterOptions: { enabled: true, placeholder: "Search Name..." },
+
+    },
+      {
+        label: "Document Type",
+        field: "certification_type",
+        sortable: true,
+        filterOptions: {
+            enabled: true,
+            placeholder: 'Select type...',
+            filterValue: '',
+            filterDropdownItems: ['Barangay Clearance','Certificate of Residency', 'Certificate of Indigency', 'Certificate of Good Moral', 'Certificate of Low Income', 'First Time Job Seeker'],
+            filterDropdown: true
+        }
+    },
+    {
+        label: "Purpose",
+        field: "purpose",
+        sortable: true,
+        filterOptions: { enabled: true, placeholder: "Search Purpose..." },
+    },
     { label: "Date Issued", field: "date_issued", sortable: true },
     { label: "Actions", field: "actions" },
 ];
 
+
 const filteredRows = computed(() => {
     return certs.value
         .filter((row) => {
+            // Filter by date range
             if (!startDate.value && !endDate.value) return true;
             const rowDate = new Date(row.date_issued).toISOString().split("T")[0];
             if (startDate.value && !endDate.value) return rowDate >= startDate.value;
@@ -112,6 +135,7 @@ const filteredRows = computed(() => {
             return rowDate >= startDate.value && rowDate <= endDate.value;
         })
         .filter((row) => {
+
             if (!searchQuery.value) return true;
             const query = searchQuery.value.toLowerCase();
             return Object.values(row).some((val) =>
@@ -123,14 +147,15 @@ const filteredRows = computed(() => {
             index: index + 1,
         }));
 });
-
 const clearDateRange = () => {
     startDate.value = "";
     endDate.value = "";
 };
 
+
+
 onMounted(async () => {
-    await fetchCerts("Certificate of Good Moral");
+    await fetchCerts();
 });
 
 function gotoPrintPreview(row){
@@ -145,4 +170,11 @@ function gotoPrintPreview(row){
       });
     }
 }
+
 </script>
+<style scoped>
+table{
+    overflow-y: visible !important;
+}
+</style>
+

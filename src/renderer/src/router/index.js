@@ -19,8 +19,10 @@ import DisclosurePolicy from '../pages/secretary/policy/DisclosurePolicy.vue'
 import TransactionHistory from '../pages/secretary/transaction/TransactionHistory.vue'
 import GenerateReport from '../pages/secretary/report/GenerateReport.vue'
 import NewResidentView from '../pages/secretary/residents/NewResidentView.vue'
+// import NewResidentView from '../pages/secretary/residents/AddResidentView.vue'
 import UserManagement from '../pages/superadmin/users/UserManagement.vue'
-
+import ViewEachHousehold from '../pages/secretary/residents/components/ViewEachHousehold.vue'
+import ViewEachResident from '../pages/secretary/residents/components/ViewEachResident.vue'
 // Printing preview page
 
 import CertificatePrint from '../print/CertificatePrint.vue'
@@ -48,12 +50,14 @@ const routes = [
   { path: '/transactions', component: TransactionHistory },
   { path: '/report', component: GenerateReport },
   { path: '/newresident', component: NewResidentView },
+  {path: '/view-each-household', component: ViewEachHousehold },
+  { path: '/view-resident', component: ViewEachResident },
 
   // Superadmin Routes
   { path: '/superadmin', component: UserManagement },
 
   // Printing preview routes
-  {path: '/certificate-preview-print', component: CertificatePrint}
+  { path: '/certificate-preview-print', component: CertificatePrint }
 ]
 
 const router = createRouter({

@@ -1,9 +1,10 @@
 <template>
-  <div class="p-6 min-h-screen">
+  <div class="p-6 bg-base-200 min-h-screen">
     <div class="max-w-4xl mx-auto">
-      <div class="flex items-center justify-center mb-6 print-hide">
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold">Certificate Templates — Barangay</h1>
         <div class="flex gap-2">
-          <button @click="exportArea" class="btn btn-accent">Export PDF</button>
+          <button @click="exportArea" class="btn btn-primary">Export PDF</button>
           <button @click="printPreview" class="btn btn-ghost">Print</button>
         </div>
       </div>
@@ -24,7 +25,7 @@
           />
         </div>
 
-        <div class="relative mb-6" id="certificate-try">
+        <div class="relative mb-6">
           <div class="flex items-start justify-between">
             <!-- Logo on the left -->
             <img
@@ -57,24 +58,10 @@
 
         <!-- Body -->
         <div class="relative text-gray-900 leading-relaxed text-justify">
-          <h1
-            v-if="resident.certification_type === 'Certificate of Good Moral'"
-            class="text-2xl font-extrabold text-center uppercase underline mb-8"
-          >
-            Certificate of Good Moral Character
-          </h1>
-          <h1
-            v-if="resident.certification_type === 'First Time Job Seeker'"
-            class="text-2xl font-extrabold text-center uppercase underline mb-8"
-          >
-            Certificate of First Time Jobseeker
-          </h1>
-          <h1
-            v-else
-            class="text-2xl font-extrabold text-center uppercase underline mb-8"
-          >
+          <h1 class="text-2xl font-extrabold text-center uppercase underline mb-8">
             {{ resident.certification_type }}
           </h1>
+
           <p class="indent-8 mb-4">
             This is to certify that
             <span class="font-semibold underline decoration-gray-400">{{ resident.name }}</span
@@ -242,7 +229,7 @@
           <!-- Right Section (Signature Box) -->
           <div class="w-1/3 text-center">
             <div class="border border-dashed p-4 h-24 flex flex-col justify-end">
-              <p class="font-semibold text-sm uppercase tracking-narrow">{{ resident.name }}</p>
+              <p class="font-semibold uppercase tracking-wider">{{ resident.name }}</p>
               <p class="text-sm italic text-gray-600">Signature over printed name</p>
             </div>
           </div>
@@ -259,9 +246,8 @@
         </div>
       </div>
     </div>
-    <div v-if="busy" class="fixed inset-0 bg-black/80 flex items-center justify-center text-white">
-      <LoadingIcon />
-      <p class="text-2xl ml-3">Generating PDF...</p>
+    <div v-if="busy" class="fixed inset-0 bg-black/30 flex items-center justify-center text-white">
+      Generating PDF...
     </div>
   </div>
 </template>
@@ -271,7 +257,6 @@ import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import html2canvas from 'html2canvas-pro'
 import jsPDF from 'jspdf'
-import LoadingIcon from '../components/Shared/LoadingIcon.vue'
 
 const route = useRoute()
 const rawData = route.query.data ? decodeURIComponent(route.query.data) : null
@@ -329,42 +314,50 @@ async function exportArea() {
     const el = document.getElementById('certificate-area')
     if (!el) return alert('Printable area not found')
 
-    // Wait for images/logos to render
+    // Wait briefly to ensure all elements (like logos) are rendered
     await new Promise((r) => setTimeout(r, 200))
 
-    // Render element to canvas
+    // Render the element to a high-resolution canvas
     const canvas = await html2canvas(el, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: '#ffffff'
+      scale: 2, // higher = sharper text, but larger file
+      useCORS: true, // allow loading images like your logo
+      backgroundColor: '#ffffff' // ensure white background
     })
 
+    // Convert the rendered canvas to a PNG image
     const imgData = canvas.toDataURL('image/png')
-    const pdf = new jsPDF('portrait', 'mm', 'a4')
 
+    // Create a jsPDF instance (A4 page)
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    })
+
+    // Compute proper sizing for A4
+    const margin = 10 // in mm
     const pageWidth = pdf.internal.pageSize.getWidth()
     const pageHeight = pdf.internal.pageSize.getHeight()
-    const margin = 10
-
-    // Compute image size to fit A4 width
     const imgWidth = pageWidth - margin * 2
     const imgHeight = (canvas.height * imgWidth) / canvas.width
 
+    pdf.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight)
+
+    // If image taller than one page → split across multiple pages
     let heightLeft = imgHeight
-    let position = margin
+    let position = 10
 
-    // Add the first page
-    pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight)
-    heightLeft -= pageHeight - margin * 2
+    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight)
+    heightLeft -= pageHeight - 20
 
-    // Add remaining pages if content is taller than one page
     while (heightLeft > 0) {
-      position = heightLeft - imgHeight + margin
+      position = heightLeft - imgHeight + 10
       pdf.addPage()
-      pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight)
-      heightLeft -= pageHeight - margin * 2
+      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight)
+      heightLeft -= pageHeight - 20
     }
 
+    // Save PDF locally
     pdf.save('certificate.pdf')
   } catch (error) {
     console.error('PDF export failed:', error)
@@ -396,50 +389,24 @@ async function exportArea() {
         print-color-adjust: exact !important;
     }
 } */
-
+#certificate-area {
+  background-color: white;
+  margin: 20px auto;
+  box-sizing: border-box;
+}
 @media print {
-  /* Hide everything except certificate */
   body * {
-    display: none !important; /* completely remove other elements from print */
-    margin: 0;
-    padding: 0;
-    box-shadow: none !important;
+    visibility: hidden; /* hide everything */
   }
-  .print-hide {
-    display: none !important;
+  #printArea,
+  #printArea * {
+    visibility: visible; /* show only your div */
   }
-  /* Show only certificate */
-  #certificate-area {
-    display: block !important;
-    position: relative;
-    width: 210mm; /* A4 width */
-    height: 297mm; /* A4 height */
-    margin: 0 auto;
-    padding: 0;
-    box-sizing: border-box;
-    transform: scale(1);
-    transform-origin: top center;
-
-    /* Reset all shadows */
-    box-shadow: none !important;
-
-    /* Preserve background colors/images */
-    -webkit-print-color-adjust: exact;
-    background: white !important;
-  }
-
-  /* Remove shadows from child elements */
-  #certificate-area * {
-    box-shadow: none !important;
-  }
-
-  html,
-  body {
-    width: 210mm;
-    height: 297mm;
-    margin: 0;
-    padding: 0;
-    background: white;
+  #printArea {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
   }
 }
 </style>

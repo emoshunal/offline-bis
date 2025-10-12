@@ -63,13 +63,14 @@ import { computed, ref, onMounted } from 'vue';
 import { VueGoodTable } from 'vue-good-table-next';
 import RemarksModal from './RemarksModal.vue';
 import MoreDialog from './MoreDialog.vue'
+import { useRouter } from 'vue-router';
 import { useResidents } from '../../../../composables/useResidents';
 
 const { fetchResidents } = useResidents();
 const remarksModalRef = ref(null);
 const moreDialogRef = ref(null);
 const totalFilteredRows = ref(0);
-
+const router = useRouter();
 const props = defineProps({
   residents: { type: Array, required: true }
 });
@@ -246,7 +247,11 @@ function deleteRow(row) {
 
 function viewRow(row) {
   console.log('View clicked:', row);
-  // open view modal, etc.
+  router.push({
+   path: "/view-resident",
+   query: { data: encodeURIComponent(JSON.stringify(row)) },
+  })
+ 
 }
 
 

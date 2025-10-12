@@ -66,8 +66,7 @@
                             <li><a>Edit</a></li>
                             <hr class="my-1 border-gray-300" />
                             <li><a>Delete</a></li>
-                            <li><a>View</a></li>
-                            <li><a>Print</a></li>
+                            <li><a @click="gotoPrintPreview(props.row)">Preview</a></li>
                         </ul>
                     </div>
                 </template>
@@ -88,9 +87,11 @@
 import { ref, computed, onMounted } from "vue";
 import { VueGoodTable } from "vue-good-table-next";
 import { useCertifications } from "../../../../composables/useCertifications";
+import { useRouter } from "vue-router";
 
 const { fetchCerts, certs } = useCertifications();
 
+const router = useRouter();
 const startDate = ref("");
 const endDate = ref("");
 const searchQuery = ref("");
@@ -133,4 +134,18 @@ const clearDateRange = () => {
 onMounted(async () => {
     await fetchCerts("First Time Job Seeker");
 });
+
+function gotoPrintPreview(row){
+    if(row){
+        const data = {
+            ...row
+        }
+
+        router.push({
+        path: "/certificate-preview-print",
+        query: { data: encodeURIComponent(JSON.stringify(data)) },
+      });
+    }
+}
+
 </script>

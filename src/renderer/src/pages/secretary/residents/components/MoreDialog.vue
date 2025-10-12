@@ -86,11 +86,11 @@
       <form method="dialog" @submit.prevent="handleSaveCerts">
         <fieldset class="fieldset mt-4">
 
-          <textarea v-model="purpose" class="textarea h-24 w-full textarea-md" placeholder="Purpose"></textarea>
+          <textarea v-model="purpose" class="textarea h-24 w-full textarea-md" placeholder="Purpose" required></textarea>
           <div class="label">Do not leave blank</div>
         </fieldset>
         <div class="modal-action">
-          <button class="btn btn-accent">Save and Print</button>
+          <button class="btn btn-accent">Issue Document</button>
           <button class="btn" @click="showPurposeModal = false">Cancel</button>
         </div>
       </form>

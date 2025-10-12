@@ -64,8 +64,7 @@
                         <li><a>Edit</a></li>
                         <hr class="my-1 border-gray-300" />
                         <li><a>Delete</a></li>
-                        <li><a>View</a></li>
-                        <li><a>Print</a></li>
+                        <li><a @click="gotoPrintPreview(props.row)">Preview</a></li>
                     </ul>
                 </div>
             </template>
@@ -85,9 +84,11 @@
 import { ref, computed, onMounted, watch, nextTick } from "vue";
 import { VueGoodTable } from "vue-good-table-next";
 import { useCertifications } from "../../../../composables/useCertifications";
+import { useRouter } from 'vue-router';
 
 const { fetchCerts, certs } = useCertifications();
 
+const router = useRouter();
 const startDate = ref("");
 const endDate = ref("");
 const searchQuery = ref("");
@@ -103,6 +104,7 @@ const columns = [
         filterOptions: { enabled: true, placeholder: "Search Name..." },
 
     },
+  
     {
         label: "Purpose",
         field: "purpose",
@@ -148,6 +150,18 @@ onMounted(async () => {
     await fetchCerts("Barangay Clearance");
 });
 
+function gotoPrintPreview(row){
+    if(row){
+        const data = {
+            ...row
+        }
+
+        router.push({
+        path: "/certificate-preview-print",
+        query: { data: encodeURIComponent(JSON.stringify(data)) },
+      });
+    }
+}
 
 </script>
 <style scoped>

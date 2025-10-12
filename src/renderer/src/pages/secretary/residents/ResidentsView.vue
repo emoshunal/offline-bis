@@ -79,8 +79,7 @@
         </div> -->
       
             <ResidentsTable :residents="residents" />
-          
-       
+        
     </div>
 </template>
 

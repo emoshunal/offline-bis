@@ -154,10 +154,10 @@ ipcMain.handle('print-element-to-pdf', async (event, payload = {}) => {
 //         console.log('🧾 Loading temporary print window...');
 //         await tmpWin.loadURL(encodedHtml);
 
-     
+
 //         await new Promise((resolve) => {
 //             tmpWin.webContents.once('did-finish-load', resolve);
-           
+
 //             setTimeout(resolve, 4000);
 //         });
 
@@ -189,8 +189,8 @@ ipcMain.handle('print-element-to-pdf', async (event, payload = {}) => {
 //         return { error: err.message || String(err) };
 //     }
 // });
-  
-  
+
+
 
 ipcMain.handle("certificate:print", async (event, data) => {
     try {
@@ -207,16 +207,16 @@ ipcMain.handle("certificate:print", async (event, data) => {
 ipcMain.handle("certification:add", async (event, { resident_id, certification_type, purpose, issued_by_user_id }) => {
     try {
         const prefixes = {
-            "Barangay Clearance" : "BC",
-            "Certificate of Indigency" : "COI",
-            "Certificate of Residency" : "COR",
-            "Certificate of Good Moral" : "CGM",
-            "Certificate of Low Income" : "CLI",
-            "First Time Job Seeker" : "FTJS"
+            "Barangay Clearance": "BC",
+            "Certificate of Indigency": "COI",
+            "Certificate of Residency": "COR",
+            "Certificate of Good Moral": "CGM",
+            "Certificate of Low Income": "CLI",
+            "First Time Job Seeker": "FTJS"
         };
         const prefix = prefixes[certification_type] || "GEN";
         const year = new Date().getFullYear();
-        
+
         const stmtLast = db.prepare(`
             SELECT control_number
             FROM certifications
@@ -228,18 +228,18 @@ ipcMain.handle("certification:add", async (event, { resident_id, certification_t
         const last = stmtLast.get(certification_type, `${prefix}-${year}-%`);
 
         let nextNum = 1;
-        if(last && last.control_number){
+        if (last && last.control_number) {
             const match = last.control_number.match(/-(\d+)$/);
-            if(match) nextNum = parseInt(match[1]) + 1;
+            if (match) nextNum = parseInt(match[1]) + 1;
         }
 
-        const padded = String(nextNum).padStart(4,"0")
-        const control_number = `${prefix}-${year}-${padded}`; 
+        const padded = String(nextNum).padStart(4, "0")
+        const control_number = `${prefix}-${year}-${padded}`;
 
         const date_issued = new Date().toLocaleString()
 
         const stmt = db.prepare("INSERT INTO certifications (resident_id, purpose, issued_by_user_id, certification_type, control_number,date_issued) VALUES (?, ?, ?, ?, ?, ?)")
-        const result = stmt.run(resident_id,  purpose, issued_by_user_id, certification_type, control_number, date_issued);
+        const result = stmt.run(resident_id, purpose, issued_by_user_id, certification_type, control_number, date_issued);
 
         const residentStmt = db.prepare(`
             SELECT resident_since, house_no_st, sitio, dob, marital_status
@@ -266,6 +266,9 @@ ipcMain.handle("certification:getAll", async (event, type = null) => {
           c.issued_by_user_id,
           c.created_at,
           r.resident_id,
+          r.marital_status,
+          r.house_no_st,
+          r.sitio,
           r.first_name || ' ' || IFNULL(r.middle_name || ' ', '') || r.last_name || 
             CASE WHEN r.suffix IS NOT NULL AND r.suffix != '' THEN ' ' || r.suffix ELSE '' END 
             AS resident_name
@@ -288,4 +291,4 @@ ipcMain.handle("certification:getAll", async (event, type = null) => {
         return { success: false, error: "Failed to fetch certifications" };
     }
 });
-  
+

@@ -2,7 +2,7 @@ import Database from "better-sqlite3";
 import path from "path";
 import { app } from "electron";
 
-const dbPath = path.join(app.getPath("userData"), "barangay.db");
+const dbPath = path.join(app.getPath("userData"), "barangay-bued.db");
 const db = new Database(dbPath)
 
 db.prepare(`
@@ -23,19 +23,22 @@ db.prepare(`
         pwd INTEGER,
         voter  INTEGER,
         residency_status TEXT,
+        residency_status_other TEXT,
         resident_since TEXT,
         house_no_st TEXT,
         sitio TEXT,
         phone TEXT,
         soi TEXT,
         income INTEGER,
+        household_type TEXT,
+        family_type TEXT,
         relationship_to_household_head TEXT,
         relationship_to_family_head TEXT,
         created_at TEXT DEFAULT (datetime('now')),
         added_by_user_id INTEGER,
         tags TEXT,
-        FOREIGN KEY (household_id) REFERENCES households(household_id),
-        FOREIGN KEY (family_id) REFERENCES families(family_id)
+        FOREIGN KEY (household_id) REFERENCES households(household_id) ON DELETE CASCADE,
+        FOREIGN KEY (family_id) REFERENCES families(family_id) ON DELETE CASCADE
 
     )
     `).run();
@@ -46,8 +49,7 @@ db.prepare(`
         household_head_id INTEGER,
         housing_type TEXT,
         ownership_status TEXT,
-        created_at TEXT DEFAULT (datetime('now')),
-        FOREIGN KEY (household_head_id) REFERENCES residents(resident_id)
+        created_at TEXT DEFAULT (datetime('now'))
         )    
     `).run();
 
@@ -57,8 +59,7 @@ db.prepare(`
         household_id INTEGER,
         family_head_id INTEGER,
         created_at TEXT DEFAULT (datetime('now')),
-        FOREIGN KEY (household_id) REFERENCES households(household_id),
-        FOREIGN KEY (family_head_id) REFERENCES residents(resident_id)
+        FOREIGN KEY (household_id) REFERENCES households(household_id) ON DELETE CASCADE
         )`).run();
 
 db.prepare(`
@@ -97,19 +98,21 @@ db.prepare(`
         password_token TEXT,
         user_role TEXT,
         status INTEGER DEFAULT 0,
+        fullname TEXT,
         created_at TEXT DEFAULT (datetime('now'))
         )    
     `).run();
 
-try {
-    db.prepare(`ALTER TABLE users ADD COLUMN status INTEGER DEFAULT 0`).run();
-    db.prepare(`ALTER TABLE users ADD COLUMN fullname TEXT`).run();
-    db.prepare(`ALTER TABLE residents ADD COLUMN tags TEXT`).run();
-} catch (err) {
-    if (!/duplicate column/i.test(err.message)) {
-        throw err; 
-    }
-}
+// try {
+//     db.prepare(`ALTER TABLE users ADD COLUMN status INTEGER DEFAULT 0`).run();
+//     db.prepare(`ALTER TABLE users ADD COLUMN fullname TEXT`).run();
+//     db.prepare(`ALTER TABLE residents ADD COLUMN tags TEXT`).run();
+//     db.prepare(`ALTER TABLE residents ADD COLUMN residency_status_other TEXT`).run();
+// } catch (err) {
+//     if (!/duplicate column/i.test(err.message)) {
+//         throw err;
+//     }
+// }
 
 db.prepare(`
         CREATE TABLE IF NOT EXISTS logs(

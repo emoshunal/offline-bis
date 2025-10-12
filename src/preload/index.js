@@ -10,12 +10,17 @@ const api = {
   loginUser: (credentials) => ipcRenderer.invoke('user:login', credentials),
   getAllResidents: () => ipcRenderer.invoke('resident:getAllRecords'),
   updateResidentRemarks: (residents) => ipcRenderer.invoke('resident:updateRemarks', residents),
+  addResident: (residents) => ipcRenderer.invoke('resident:add', residents),
+  searchHouseholdHead: (search) => ipcRenderer.invoke('household:search', search),
+  getAllHouseholds: () => ipcRenderer.invoke('household:getAll'),
+  getHouseholdById: (householdId) => ipcRenderer.invoke('household:getById', householdId),
+  searchFamilyHead: (search) => ipcRenderer.invoke('family:search', search),
   addCertification: (certification) => ipcRenderer.invoke('certification:add', certification),
-  getAllCerts: (type) => ipcRenderer.invoke('certification:getAll',type),
+  getAllCerts: (type) => ipcRenderer.invoke('certification:getAll', type),
   printCertificate: (certification) => ipcRenderer.invoke('certificate:print', certification),
   printToPDF: (options) => ipcRenderer.invoke('print-to-pdf', options),
   printElementToPDF: (payload) => ipcRenderer.invoke('print-element-to-pdf', payload),
-  
+
 }
 
 // Use `contextBridge` APIs to expose Electron APIs t

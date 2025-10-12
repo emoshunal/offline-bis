@@ -1,5 +1,5 @@
 <template>
-    <div class="navbar bg-base-100 shadow-sm">
+    <div class="navbar bg-base-100 shadow-sm print-hide">
         <div class="flex-none">
             <button class="btn btn-square btn-ghost">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -33,3 +33,11 @@
         </div>
     </div>
 </template>
+<style scoped>
+
+@media print{
+  .print-hide {
+    display: none !important;
+  }
+}
+</style>
